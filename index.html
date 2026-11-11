@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4f3ed">
+<title>Exchange Rate Lab | Econ 3</title>
+<style>
+:root{color-scheme:light;--ink:#182d2b;--muted:#4e625d;--paper:#f4f3ed;--card:#fffefa;--line:#d8dfd7;--teal:#14685e;--rust:#a64629;--blue:#294c79;--shadow:0 12px 28px #22383209}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Instrument Sans",system-ui,sans-serif;font-size:15px;line-height:1.55}
+button,select,input{font:inherit}
+button,select{min-height:44px}
+:focus-visible{outline:3px solid #297966;outline-offset:3px}
+[hidden]{display:none!important}
+header{border-bottom:1px solid var(--line)}
+.wrap{width:min(1160px,calc(100% - 56px));margin:auto}
+.top{height:68px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:760;display:flex;align-items:center;gap:10px}
+.mark{display:grid;place-items:center;background:var(--ink);color:#fff;width:34px;height:34px;border-radius:9px;font-size:21px}
+.chapter{font-size:.84rem;color:var(--muted)}
+.intro{padding:38px 0 28px}
+h1{font-family:"Instrument Serif",Georgia,serif;line-height:1.02;font-size:clamp(2.65rem,7vw,5.1rem);letter-spacing:-.06em;font-weight:500;margin:0 0 12px}
+.intro p{margin:0;color:var(--muted);max-width:620px;font-size:1.04rem}
+.layout{display:grid;grid-template-columns:minmax(275px,.74fr) minmax(0,1.55fr);gap:22px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.controls{padding:22px}
+h2,h3{margin:0;line-height:1.25}
+h2{font-size:1.18rem}
+h3{font-size:1rem}
+.field{margin-top:18px}
+label,legend{font-weight:680;display:block;margin-bottom:6px}
+select{width:100%;background:#fff;color:var(--ink);border:1px solid #b8c7bf;border-radius:8px;padding:7px 9px}
+.scenario{min-height:70px;margin:10px 0 0;font-size:.9rem;color:var(--muted)}
+fieldset{margin:18px 0 0;padding:0;border:0;min-width:0}
+.segment{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#edf1eb;padding:4px;border-radius:10px}
+.segment label{margin:0;position:relative;cursor:pointer}
+.segment input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.segment span{display:block;text-align:center;padding:8px;border-radius:7px;font-weight:630}
+.segment input:checked+span{background:var(--ink);color:white}
+.segment input:focus-visible+span{outline:3px solid #297966;outline-offset:3px}
+.slider label{display:flex;justify-content:space-between;gap:8px}
+input[type=range]{width:100%;accent-color:var(--teal);min-height:24px}
+.slider output{font-variant-numeric:tabular-nums}
+.actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+button{cursor:pointer;border-radius:9px;padding:9px 13px;font-weight:720;border:1px solid transparent}
+.primary{background:var(--teal);color:#fff;flex:1}
+.primary:hover{background:#104f47}
+.primary:disabled{background:#dce5df;color:#405951;cursor:default}
+.secondary{background:transparent;color:var(--ink);border-color:var(--line)}
+.secondary:hover{background:#edf1eb}
+.graph{padding:23px 24px 17px}
+.graphhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.mode{font-size:.78rem;font-weight:720;color:var(--teal);background:#e8f2ec;padding:4px 9px;border-radius:6px}
+.quote{margin:8px 0 8px;color:var(--muted);font-size:.89rem}
+canvas{display:block;width:100%;height:clamp(285px,37vw,400px);margin:0 auto}
+.legend{display:flex;flex-wrap:wrap;gap:5px 15px;list-style:none;padding:0;margin:8px 0 0;color:var(--muted);font-size:.79rem}
+.legend li{display:flex;align-items:center;gap:6px}
+.swatch{width:17px;border-top:3px solid}
+.swatch.d{color:var(--teal)}.swatch.s{color:var(--rust)}.swatch.shift{color:#59645e;border-top-style:dashed}.swatch.peg{color:var(--blue);border-top-style:dotted}
+.result{margin-top:16px;padding:20px 24px}
+.feedback{margin:0 0 12px;color:var(--teal);font-weight:730}
+.metrics{margin:14px 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.metric{background:#eef2ed;border-radius:9px;padding:10px 11px}
+.metric dt{font-size:.78rem;color:var(--muted)}
+.metric dd{margin:3px 0 0;font-weight:750;font-variant-numeric:tabular-nums}
+.result p:last-child{margin-bottom:0}
+.empty{color:var(--muted);font-size:.89rem;margin:12px 0 0}
+footer{padding:19px 0 30px;color:var(--muted);font-size:.84rem}
+@media(max-width:760px){.wrap{width:calc(100% - 28px)}.top{height:57px}.intro{padding:28px 0 20px}.layout{grid-template-columns:1fr;gap:14px}.graph,.controls,.result{padding:17px}.scenario{min-height:0}.metrics{grid-template-columns:1fr}.chapter{font-size:.75rem}}
+</style>
+</head>
+<body>
+<header><div class="wrap top"><div class="brand"><span class="mark" aria-hidden="true">⇄</span>Econ 3 Lab</div><div class="chapter">Chapter 10 · International Economics</div></div></header>
+<main class="wrap">
+<section class="intro"><h1>Exchange Rate Lab</h1><p>Choose a shock, predict the outcome, then see how the market for British pounds responds under a float or a peg.</p></section>
+<div class="layout">
+<section class="controls card" aria-labelledby="experiment">
+<h2 id="experiment">Set up the experiment</h2>
+<div class="field"><label for="shock">Market shock</label>
+<select id="shock">
+<option value="imports">U.S. imports from Britain rise</option>
+<option value="assets">British funds buy more U.S. bonds</option>
+<option value="expectation">Traders expect the pound to weaken</option>
+<option value="prices">British goods become relatively expensive</option>
+<option value="both">U.S. imports and British bond purchases rise</option>
+<option value="custom">Set your own shifts</option>
+</select>
+<p id="scenario" class="scenario"></p></div>
+<div id="custom" hidden>
+<div class="field slider"><label for="demand">Pound demand shift <output id="demandValue" for="demand"></output></label><input id="demand" type="range" min="-32" max="32" step="1" value="0"></div>
+<div class="field slider"><label for="supply">Pound supply shift <output id="supplyValue" for="supply"></output></label><input id="supply" type="range" min="-32" max="32" step="1" value="0"></div>
+<p class="empty">Shifts are in millions of GBP per day at each quote. Positive values shift a curve right.</p>
+</div>
+<fieldset><legend>Exchange rate regime</legend><div class="segment">
+<label><input type="radio" name="regime" value="float" checked><span>Float</span></label>
+<label><input type="radio" name="regime" value="peg"><span>Peg</span></label>
+</div></fieldset>
+<div class="field"><label for="prediction" id="question"></label><select id="prediction"></select></div>
+<div class="actions"><button class="primary" id="reveal" disabled>Reveal outcome</button><button class="secondary" id="reset">Reset</button></div>
+</section>
+<div>
+<section class="graph card" aria-labelledby="graphTitle">
+<div class="graphhead"><h2 id="graphTitle">U.S. market for British pounds</h2><span id="mode" class="mode"></span></div>
+<p class="quote">A higher USD-per-GBP quote means a weaker U.S. dollar.</p>
+<canvas id="chart" role="img" aria-label="Initial demand and supply intersect at 1.25 USD per GBP and 60 million pounds per day."></canvas>
+<ul class="legend"><li><span class="swatch d"></span>Demand</li><li><span class="swatch s"></span>Supply</li><li id="shiftLegend" hidden><span class="swatch shift"></span>Shifted curve</li><li id="pegLegend" hidden><span class="swatch peg"></span>Peg</li></ul>
+</section>
+<p id="hint" class="empty">The graph shows the initial equilibrium. Make a prediction to see the shock.</p>
+<section id="result" class="card result" aria-live="polite" hidden></section>
+</div>
+</div>
+</main>
+<footer class="wrap">Illustrative model. Rates and quantities are simulated. Initial quote is 1.25 USD per GBP.</footer>
+<script src="lab.js" defer></script>
+</body>
+</html>
